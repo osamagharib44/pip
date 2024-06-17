@@ -1,0 +1,186 @@
+<div class="bg-gray-200 h-screen flex">
+    <div class="mt-16 w-full flex">
+        <!--sidebar-->
+        <div class="w-1/4 bg-white border-r border-gray-200 flex flex-col">
+            <div class="p-4 border-b border-gray-200">
+                <h2 class="text-lg font-semibold">Chats</h2>
+            </div>
+            <div class="flex-grow p-4 space-y-4 overflow-y-auto">
+                <!-- Contact Item -->
+
+                <div
+                    class="flex-col items-center justify-evenly transition-all duration-200 ease-in-out"
+                    [ngClass]="
+                        InChat(item.id)
+                            ? 'bg-purple-600 rounded-xl'
+                            : 'bg-transparent'
+                    "
+                    *ngFor="let item of this.chatsService.friends"
+                >
+                    <a
+                        [routerLink]="['/chats', item.id]"
+                        class="flex items-center space-x-4 ml-2"
+                    >
+                        <div
+                            class="w-12 h-12 border-white rounded-full mt-2 flex justify-center items-center transition-all duration-100"
+                            [ngClass]="InChat(item.id) ? 'border-2' : ''"
+                        >
+                            <img
+                                [src]="item.imagePath"
+                                alt="User"
+                                class="rounded-full object-cover transition-all duration-100"
+                                [ngClass]="
+                                    InChat(item.id)
+                                        ? 'w-[85%] h-[85%]'
+                                        : 'w-[100%] h-[100%] '
+                                "
+                            />
+                        </div>
+
+                        <div class="mt-2">
+                            <h3
+                                class="text-sm"
+                                [ngClass]="
+                                    InChat(item.id)
+                                        ? 'font-bold text-white'
+                                        : 'font-medium text-black'
+                                "
+                            >
+                                {{ item.username }}
+                            </h3>
+                            <p
+                                class="text-xs ml-1"
+                                [ngClass]="
+                                    InChat(item.id)
+                                        ? 'text-gray-100'
+                                        : 'text-gray-500'
+                                "
+                                *ngIf="
+                                    this.chatsService.SeenChat(item.id) == true
+                                "
+                            >
+                                Opened
+                            </p>
+                            <div
+                                class="flex items-center justify-evenly"
+                                *ngIf="
+                                    this.chatsService.SeenChat(item.id) == false
+                                "
+                            >
+                                <p class="text-xs text-black text-bold mr-2">
+                                    New message
+                                </p>
+                                <div
+                                    class="bg-purple-600 rounded-full w-2 h-2"
+                                ></div>
+                            </div>
+                        </div>
+                    </a>
+                    <hr class="mt-4 mb-4" />
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Chat Window -->
+        <div
+            class="flex flex-col flex-grow bg-gray-100 max-w-[75%]"
+            *ngIf="currentlyOpened"
+        >
+            <!-- Chat Header -->
+            <div
+                class="flex items-center p-4 bg-white border-b border-gray-200"
+            >
+                <img
+                    [src]="currentlyOpened.imagePath"
+                    alt="User"
+                    class="w-10 h-10 rounded-full object-cover"
+                />
+                <h3 class="ml-4 text-lg font-medium">
+                    {{ currentlyOpened.username }}
+                </h3>
+            </div>
+
+            <!-- Chat Messages -->
+            <div
+                #scrollable
+                class="flex flex-col flex-grow p-4 space-y-4 overflow-y-auto"
+            >
+                <div *ngFor="let message of messages">
+                    <div
+                        class="flex"
+                        *ngIf="message.sender == this.currentlyOpened.id"
+                    >
+                        <img
+                            [src]="currentlyOpened.imagePath"
+                            alt="User"
+                            class="w-10 h-10 rounded-full object-cover"
+                        />
+                        <p
+                            class="ml-4 p-3 bg-white border border-gray-200 rounded-lg text-sm max-w-[60%] break-words"
+                        >
+                            {{ message.content }}
+                        </p>
+                    </div>
+
+                    <div
+                        class="flex justify-end"
+                        *ngIf="message.sender != this.currentlyOpened.id"
+                    >
+                        <p
+                            class="mr-4 p-3 bg-purple-700 text-white rounded-lg max-w-[60%] text-sm break-words"
+                        >
+                            {{ message.content }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chat Input -->
+            <form
+                class="p-4 bg-white border-t border-gray-300"
+                [formGroup]="form"
+            >
+                <div class="flex items-center justify-evenly">
+                    <div class="w-[90%]">
+                        <textarea
+                            type="text"
+                            placeholder=" Type a message....."
+                            style="overflow: hidden; resize: none"
+                            class="flex-grow w-[100%] h-12 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-purple-800"
+                            formControlName="message"
+                            [ngClass]="{
+                                'bg-red-100': this.form
+                                    .get('message')
+                                    .hasError('maxlength')
+                            }"
+                            (input)="autoGrowTextZone($event)"
+                        >
+                        </textarea>
+                    </div>
+
+                    <button
+                        class="flex items-center bg-purple-600 text-white gap-1 px-2 py-2 cursor-pointer text-gray-800 font-semibold tracking-widest rounded-md hover:bg-purple-500 duration-300 hover:gap-3 hover:translate-x-2"
+                        (click)="sendMessage()"
+                        [disabled]="this.form.invalid"
+                    >
+                        SEND
+                        <svg
+                            class="w-5 h-5"
+                            stroke="currentColor"
+                            stroke-width="1.5"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                        >
+                            <path
+                                d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5"
+                                stroke-linejoin="round"
+                                stroke-linecap="round"
+                            ></path>
+                        </svg>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

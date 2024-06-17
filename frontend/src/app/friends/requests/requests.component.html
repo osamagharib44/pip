@@ -1,0 +1,106 @@
+<div *ngIf="this.fetching" class="flex justify-center items-center h-[40rem]">
+    <div class="loader w-full h-[20%]"></div>
+</div>
+<div
+    class="grid grid-cols-3 grid-rows-4 gap-6 h-[40rem]"
+    *ngIf="!this.fetching"
+>
+    <div
+        class="flex justify-evenly items-center bg-gray-50 shadow-md p-2 rounded-md"
+        *ngFor="let request of this.results"
+    >
+        <div class="w-[50%] h-full flex justify-center items-center">
+            <div
+                class="border-purple-500 border border-2 rounded-full w-28 h-28 flex justify-center items-center"
+            >
+                <img
+                    [src]="request.imagePath"
+                    alt="profile picture"
+                    class="w-[95%] h-[95%] rounded-full object-cover"
+                />
+            </div>
+        </div>
+
+        <div
+            class="w-[50%] flex flex-col justify-evenly items-center pt-2 mr-4 gap-4"
+        >
+            <div class="h-full w-36 flex flex-col items-center justify-center">
+                <a class="text-center text-xl font-medium text-gray-800"
+                    >&#64;{{ request.username }}</a
+                >
+            </div>
+
+            <div class="flex justify-between items-center gap-2">
+                <button
+                    class="overflow-h rounded-lg relative w-12 h-8 flex items-center hover:w-20 transition-w duration-200 group bg-black overflow-hidden"
+                    (click)="this.handleFriendRequest(request.id, false)"
+                >
+                    <span
+                        class="text-white translate-x-40 font-inherit font-semibold transform group-hover:translate-x-4 transition-all duration-300"
+                        >Reject</span
+                    >
+                    <span
+                        class="absolute right-0 h-full w-full rounded-lg group-hover:bg-black flex items-center justify-center transform group-hover:translate-x-40 transition-all duration-300"
+                    >
+                        <svg
+                            class="svg w-8 text-white"
+                            fill="none"
+                            height="24"
+                            stroke="currentColor"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="3"
+                            viewBox="0 0 24 24"
+                            width="24"
+                            xmlns="http://www.w3.org/2000/svg"
+                        >
+                            <path d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </span>
+                </button>
+
+                <button
+                    class="overflow-h rounded-lg relative w-12 h-8 flex items-center hover:w-20 transition-w duration-200 group bg-gradient-to-r from-purple-600 to-indigo-600 overflow-hidden"
+                    (click)="this.handleFriendRequest(request.id, true)"
+                >
+                    <span
+                        class="text-white translate-x-40 font-inherit font-semibold transform group-hover:translate-x-3 transition-all duration-300"
+                        >Accept</span
+                    >
+                    <span
+                        class="absolute right-0 h-full w-full rounded-lg group-hover:bg-gradient-to-r group-hover:from-purple-600 group-hover:to-indigo-600 flex items-center justify-center transform group-hover:translate-x-40 group-hover:w-full transition-all duration-300"
+                    >
+                        <svg
+                            class="svg w-8 text-white"
+                            fill="none"
+                            height="24"
+                            stroke="currentColor"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="3"
+                            viewBox="0 0 24 24"
+                            width="24"
+                            xmlns="http://www.w3.org/2000/svg"
+                        >
+                            <path d="M5 13l4 4L19 7"></path>
+                        </svg>
+                    </span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="h-[3rem] flex flex-row justify-center gap-8">
+    <a
+        class="text-center text-xl font-bold text-purple-700 cursor-pointer"
+        (click)="goToPage(currentPage - 1)"
+        >&lt;</a
+    >
+    <a class="text-center text-lg font-bold text-gray-800">{{ currentPage }}</a>
+    <a
+        class="text-center text-xl font-bold text-purple-700 cursor-pointer"
+        (click)="goToPage(currentPage + 1)"
+        >&gt;</a
+    >
+</div>

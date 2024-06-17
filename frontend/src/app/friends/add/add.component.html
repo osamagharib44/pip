@@ -1,0 +1,188 @@
+<div class="justify-center items-center flex w-full h-12 mb-3">
+    <input
+        type="text"
+        class="px-64 py-2 rounded-l-lg border-gray-300 border shadow-sm focus:outline-none text-gray-600"
+        placeholder="Search for users..."
+        [(ngModel)]="keyword"
+    />
+    <button
+        class="px-4 py-2 text-white bg-purple-400 rounded-r-lg border border-gray-300 shadow-sm"
+        (click)="searchUp(true)"
+    >
+        Search
+    </button>
+</div>
+<div *ngIf="this.fetching" class="flex justify-center items-center h-[38rem]">
+    <div class="loader w-full h-[20%]"></div>
+</div>
+<div
+    class="grid grid-cols-3 grid-rows-4 gap-6 h-[38rem]"
+    *ngIf="!this.fetching"
+>
+    <div
+        class="flex justify-evenly items-center bg-gray-50 shadow-md p-2 rounded-md"
+        *ngFor="let user of this.searchResults"
+    >
+        <div class="w-[50%] h-full flex justify-center items-center">
+            <div
+                class="border-purple-500 border border-2 rounded-full w-28 h-28 flex justify-center items-center"
+            >
+                <img
+                    [src]="user.imagePath"
+                    alt="profile picture"
+                    class="w-[95%] h-[95%] rounded-full object-cover"
+                />
+            </div>
+        </div>
+
+        <div
+            class="w-[50%] flex flex-col justify-evenly items-center pt-2 mr-4 gap-4"
+        >
+            <div class="h-full w-36 flex flex-col items-center justify-center">
+                <a class="text-center text-xl font-medium text-gray-800"
+                    >&#64;{{ user.username }}</a
+                >
+            </div>
+
+            <button
+                *ngIf="getItemState(user.id) == 1"
+                class="overflow-h rounded-lg relative w-24 h-8 flex items-center hover:w-12 transition-w duration-200 group bg-gradient-to-r from-purple-600 to-indigo-600 overflow-hidden"
+                [routerLink]="['/chats', user.id]"
+            >
+                <span
+                    class="text-white font-inherit font-semibold ml-5 transform group-hover:translate-x-40 transition-all duration-300"
+                    >Chat</span
+                >
+                <span
+                    class="absolute right-0 h-full w-10 rounded-lg group-hover:bg-gradient-to-r group-hover:from-purple-600 group-hover:to-indigo-600 flex items-center justify-center transform group-hover:translate-x-0 group-hover:w-full transition-all duration-300"
+                >
+                    <svg
+                        class="svg w-8 text-white"
+                        fill="none"
+                        height="24"
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        viewBox="0 0 24 24"
+                        width="24"
+                        xmlns="http://www.w3.org/2000/svg"
+                    >
+                        <path
+                            fill="none"
+                            d="M0 0h24v24H0z"
+                            stroke="none"
+                        ></path>
+                        <path d="M8 9h8"></path>
+                        <path d="M8 13h6"></path>
+                        <path
+                            d="M18 4a3 3 0 0 1 3 3v8a3 3 0 0 1 -3 3h-5l-5 3v-3h-2a3 3 0 0 1 -3 -3v-8a3 3 0 0 1 3 -3h12z"
+                            fill="currentColor"
+                        ></path>
+                    </svg>
+                </span>
+            </button>
+
+            <button
+                *ngIf="getItemState(user.id) == 3"
+                class="overflow-h rounded-lg relative w-24 h-8 flex items-center hover:w-12 transition-w duration-200 group bg-black overflow-hidden"
+                (click)="this.userService.addFriendRequest(user.id)"
+            >
+                <span
+                    class="text-white font-inherit font-semibold ml-5 transform group-hover:translate-x-40 transition-all duration-300"
+                    >Add</span
+                >
+                <span
+                    class="absolute right-0 h-full w-10 rounded-lg group-hover:bg-black flex items-center justify-center transform group-hover:translate-x-0 group-hover:w-full transition-all duration-300"
+                >
+                    <svg
+                        class="svg w-8 text-white"
+                        fill="none"
+                        height="24"
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        viewBox="0 0 24 24"
+                        width="24"
+                        xmlns="http://www.w3.org/2000/svg"
+                    >
+                        <line x1="12" x2="12" y1="5" y2="19"></line>
+                        <line x1="5" x2="19" y1="12" y2="12"></line>
+                    </svg>
+                </span>
+            </button>
+
+            <button
+                *ngIf="getItemState(user.id) == 2"
+                class="overflow-h rounded-lg relative w-24 h-8 flex items-center group bg-gray-200 border border-2 border-black overflow-hidden"
+                disabled
+            >
+                <span class="text-black font-inherit w-full">Sent</span>
+            </button>
+        </div>
+
+        <!--Buttons kinds-->
+        <!-- <div
+            class="w-full h-8 flex flex-row justify-evenly"
+            *ngIf="
+                user.id == this.userService.user.value.id ||
+                    this.userService.friendsHash[user.id];
+                else checkSent
+            "
+        >
+            <button
+                class="outline outline-1 outline-purple-500 px-6 rounded"
+                type="button"
+            >
+                View
+            </button>
+        </div>
+
+        <ng-template #checkSent>
+            <div
+                class="w-full h-8 flex flex-row justify-evenly"
+                *ngIf="
+                    this.userService.sentRequestsToHash[user.id];
+                    else notSent
+                "
+            >
+                <button
+                    class="bg-gray-300 outline outline-1 outline-purple-500 px-6 rounded"
+                    type="button"
+                    disabled
+                >
+                    Sent
+                </button>
+            </div>
+        </ng-template>
+
+        <ng-template #notSent>
+            <div class="w-full h-8 flex flex-row justify-evenly">
+                <button
+                    class="bg-purple-500 hover:bg-purple-700 text-white font-bold px-6 rounded"
+                    type="button"
+                    (click)="this.userService.addFriendRequest(user.id)"
+                >
+                    Add
+                </button>
+            </div>
+        </ng-template> -->
+    </div>
+</div>
+
+<div class="h-[3rem] flex flex-row justify-center gap-8">
+    <a
+        class="text-center text-xl font-bold text-purple-700"
+        (click)="goToPage(this.currentPage - 1)"
+        >&lt;</a
+    >
+    <a class="text-center text-lg font-bold text-gray-800">{{
+        this.currentPage
+    }}</a>
+    <a
+        class="text-center text-xl font-bold text-purple-700"
+        (click)="goToPage(this.currentPage + 1)"
+        >&gt;</a
+    >
+</div>

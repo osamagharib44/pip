@@ -1,0 +1,154 @@
+<div class="bg-gray-200 flex items-center justify-center min-h-screen">
+  <div class="w-full max-w-lg bg-white p-10 rounded-lg shadow-lg mt-2">
+    <h2 class="text-3xl font-bold mb-6 text-gray-900 text-center">Sign Up</h2>
+    <div class="flex items-center justify-center">
+      <div class="loader m-20" *ngIf="isLoading"></div>
+      <form [formGroup]="form" (ngSubmit)="onSubmit()" *ngIf="!isLoading">
+        <div class="mb-4">
+          <label class="block text-gray-700 text-lg font-bold mb-2" for="username"
+            >Username</label
+          >
+          <input
+            class="shadow appearance-none border rounded w-full py-3 px-6 text-gray-700 leading-tight focus:outline-none focus:ring-1 focus:ring-purple-800"
+            id="username"
+            type="text"
+            formControlName="username"
+            [ngClass]="{
+              'bg-red-100':
+                this.form.get('username').invalid &&
+                this.form.get('username').touched
+            }"
+            placeholder="Enter your username"
+          />
+          <!--error codes-->
+          <p
+            class="font-italic text-red-400 mt-2 pl-2"
+            *ngIf="
+              !this.form.get('username').hasError('usernameExists') &&
+              this.form.get('username').invalid &&
+              this.form.get('username').touched
+            "
+          >
+            *Username must be less than {{ this.maxUsernameLen }} characters and
+            contain only alphabets, numbers and underscores
+          </p>
+          <p
+            class="font-italic text-red-400 mt-2 pl-2"
+            *ngIf="
+              this.form.get('username').hasError('usernameExists') &&
+              this.form.get('username').touched
+            "
+          >
+            *Username already exists
+          </p>
+        </div>
+  
+        <div class="mb-4">
+          <label class="block text-gray-700 text-lg font-bold mb-2" for="email"
+            >Email</label
+          >
+          <input
+            class="shadow appearance-none border rounded w-full py-3 px-6 text-gray-700 leading-tight focus:outline-none focus:ring-1 focus:ring-purple-800"
+            id="email"
+            type="email"
+            formControlName="email"
+            [ngClass]="{
+              'bg-red-100':
+                this.form.get('email').invalid && this.form.get('email').touched
+            }"
+            placeholder="Enter your email"
+          />
+          <!--error codes-->
+          <p
+            class="font-italic text-red-400 mt-2 pl-2"
+            *ngIf="
+              this.form.get('email').hasError('email') &&
+              this.form.get('email').touched
+            "
+          >
+            *Invalid Email address
+          </p>
+          <p
+            class="font-italic text-red-400 mt-2 pl-2"
+            *ngIf="
+              this.form.get('email').hasError('emailExists') &&
+              this.form.get('email').touched
+            "
+          >
+            *Email already exists
+          </p>
+        </div>
+        <div class="mb-4">
+          <label class="block text-gray-700 text-lg font-bold mb-2" for="password"
+            >Password</label
+          >
+          <input
+            class="shadow appearance-none border rounded w-full py-3 px-6 text-gray-700 mb-1 leading-tight focus:outline-none focus:ring-1 focus:ring-purple-800"
+            id="password"
+            type="password"
+            formControlName="password"
+            [ngClass]="{
+              'bg-red-100':
+                this.form.get('password').invalid &&
+                this.form.get('password').touched
+            }"
+            placeholder="Enter your password"
+          />
+          <!--error codes-->
+          <p
+            class="font-italic text-red-400 mt-2 pl-2"
+            *ngIf="
+              this.form.get('password').hasError('minlength') &&
+              this.form.get('password').touched
+            "
+          >
+            *Password must be atleast {{ this.minPasswordLen }} characters
+          </p>
+        </div>
+        <div class="mb-6">
+          <label class="block text-gray-700 text-lg font-bold mb-2" for="confirm"
+            >Confirm Password</label
+          >
+          <input
+            class="shadow appearance-none border rounded w-full py-3 px-6 text-gray-700 mb-3 leading-tight focus:outline-none focus:ring-1 focus:ring-purple-800"
+            id="confirm"
+            type="password"
+            formControlName="confirmPassword"
+            [ngClass]="{
+              'bg-red-100':
+                this.form.get('confirmPassword').invalid &&
+                this.form.get('confirmPassword').touched
+            }"
+            placeholder="confirm your password"
+          />
+          <p
+            class="font-italic text-red-400 mt-2 pl-2"
+            *ngIf="
+              this.form.get('confirmPassword').hasError('passwordMismatch') &&
+              this.form.get('confirmPassword').touched
+            "
+          >
+            *Passwords must match
+          </p>
+        </div>
+  
+        <div class="flex items-center justify-between mb-4">
+          <button
+            class="btn"
+            type="submit"
+            [disabled]="this.form.invalid"
+          >
+            Sign Up
+          </button>
+        </div>
+  
+        <a
+          [routerLink]="['/signin']"
+          fontfamily="Raleway"
+          class="hover:text-purple-500 text-center mr-4 text-sm"
+          >Already have an account?</a
+        >
+      </form>
+    </div>
+  </div>
+</div>

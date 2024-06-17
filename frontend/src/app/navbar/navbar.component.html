@@ -1,0 +1,92 @@
+<div class="pt-2 pb-2 fixed z-50 inset-x-0 bg-gray-950 shadow-md">
+    <nav class="w-full flex justify-center items-center">
+        <div class="flex w-full justify-center w-[40%]">
+            <div class="flex justify-between items-center mt-2 mb-2">
+                <a
+                    *ngIf="this.authService.token"
+                    [routerLink]="['/chats']"
+                    routerLinkActive
+                    #rlaChats="routerLinkActive"
+                    [ngClass]="
+                        rlaChats.isActive
+                            ? 'text-purple-400 font-bold btnSel'
+                            : 'text-gray-100 font-medium btn hover:text-purple-300 '
+                    "
+                    fontfamily="Raleway"
+                    class="text-xl text-center mr-20"
+                    >Chats</a
+                >
+                <a
+                    *ngIf="this.authService.token"
+                    [routerLink]="['/friends']"
+                    routerLinkActive
+                    #rlaFriends="routerLinkActive"
+                    [ngClass]="
+                        rlaFriends.isActive
+                            ? 'text-purple-400 font-bold btnSel'
+                            : 'text-gray-100 font-medium btn hover:text-purple-300 '
+                    "
+                    fontfamily="Raleway"
+                    class="text-xl text-center"
+                    >Friends</a
+                >
+                <a
+                    *ngIf="this.authService.token == null"
+                    [routerLink]="['/signup']"
+                    routerLinkActive
+                    #rlaSignup="routerLinkActive"
+                    [ngClass]="
+                        rlaSignup.isActive
+                            ? 'text-purple-400 font-bold btnSel'
+                            : 'text-gray-100 font-medium btn hover:text-purple-300 '
+                    "
+                    fontfamily="Raleway"
+                    class="text-xl text-center"
+                    >Sign up</a
+                >
+            </div>
+
+            <div class="flex justify-center items-center pl-24 pr-24">
+                <img src="assets/pip_logo_light_mode.png" class="w-16" />
+            </div>
+
+            <div class="flex justify-between items-center mt-2 mb-2">
+                <a
+                    *ngIf="this.authService.token"
+                    [routerLink]="['/profile']"
+                    routerLinkActive
+                    #rlaProfile="routerLinkActive"
+                    [ngClass]="
+                        rlaProfile.isActive
+                            ? 'text-purple-400 font-bold btnSel'
+                            : 'text-gray-100 font-medium btn hover:text-purple-300 '
+                    "
+                    fontfamily="Raleway"
+                    class="text-xl text-center mr-20"
+                    >Profile</a
+                >
+                <a
+                    *ngIf="this.authService.token"
+                    fontfamily="Raleway"
+                    class="cursor-pointer text-gray-100 font-medium btn hover:text-purple-300 text-xl text-center"
+                    (click)="this.authService.logout()"
+                    >Log out</a
+                >
+                <a
+                    *ngIf="this.authService.token == null"
+                    [routerLink]="['/signin']"
+                    routerLinkActive
+                    #rlaSignin="routerLinkActive"
+                    [ngClass]="
+                        rlaSignin.isActive
+                            ? 'text-purple-400 font-bold btnSel'
+                            : 'text-gray-100 font-medium btn hover:text-purple-300 '
+                    "
+                    fontfamily="Raleway"
+                    class="text-xl text-center"
+                    >Sign In</a
+                >
+            </div>
+        </div>
+    </nav>
+</div>

@@ -1,0 +1,180 @@
+<div class="bg-gray-200 flex items-center justify-center min-h-screen">
+    <div class="w-full max-w-lg bg-white p-10 rounded-lg shadow-lg mt-2">
+        <h2 class="text-3xl font-bold mb-6 text-gray-900 text-center">
+            Edit your profile
+        </h2>
+        <div class="flex items-center justify-center">
+            <div class="loader m-20" *ngIf="isLoading"></div>
+            <form [formGroup]="form" (ngSubmit)="onSubmit()" *ngIf="!isLoading">
+                <div class="mb-4">
+                    <div class="h-full flex justify-center items-center">
+                        <div
+                            class="border-purple-500 border border-2 rounded-full w-40 h-40 flex justify-center items-center"
+                        >
+                            <img
+                                [src]="imagePreview"
+                                alt="profile picture"
+                                class="w-[93%] h-[93%] rounded-full object-cover"
+                            />
+                        </div>
+                    </div>
+
+                    <div
+                        class="flex flex-col items-center justify-between mt-4"
+                    >
+                        <p class="font-italic text-red-400 mb-2" *ngIf="errorMessage">
+                            {{errorMessage}}
+                        </p>
+                        <input
+                            type="file"
+                            #fileInput
+                            (change)="onFileSelected($event)"
+                            accept="image/png, image/jpeg, image/jpg"
+                            style="display: none"
+                        />
+                        <button
+                            class="upload"
+                            (click)="
+                                openFileSelector(); $event.preventDefault()
+                            "
+                        >
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke-width="2"
+                                stroke="currentColor"
+                                aria-hidden="true"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    d="M13.5 3H12H8C6.34315 3 5 4.34315 5 6V18C5 19.6569 6.34315 21 8 21H11M13.5 3L19 8.625M13.5 3V7.625C13.5 8.17728 13.9477 8.625 14.5 8.625H19M19 8.625V11.8125"
+                                    stroke="#fffffff"
+                                    stroke-width="2"
+                                ></path>
+                                <path
+                                    d="M17 15V18M17 21V18M17 18H14M17 18H20"
+                                    stroke="#fffffff"
+                                    stroke-width="2"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                ></path>
+                            </svg>
+                            UPLOAD IMAGE
+                        </button>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label
+                        class="block text-gray-700 text-lg font-bold mb-2"
+                        for="username"
+                        >Username</label
+                    >
+                    <input
+                        class="shadow appearance-none border rounded w-full py-3 px-6 text-gray-700 leading-tight focus:outline-none focus:ring-1 focus:ring-purple-800"
+                        id="username"
+                        type="text"
+                        formControlName="username"
+                        [ngClass]="{
+                            'bg-red-100':
+                                this.form.get('username').invalid &&
+                                this.form.get('username').touched
+                        }"
+                        placeholder="Enter your username"
+                    />
+                    <!--error codes-->
+                    <p
+                        class="font-italic text-red-400 mt-2 pl-2"
+                        *ngIf="
+                            !this.form
+                                .get('username')
+                                .hasError('usernameExists') &&
+                            this.form.get('username').invalid &&
+                            this.form.get('username').touched
+                        "
+                    >
+                        *Username must be less than
+                        {{ this.maxUsernameLen }} characters and contain only
+                        alphabets, numbers and underscores
+                    </p>
+                    <p
+                        class="font-italic text-red-400 mt-2 pl-2"
+                        *ngIf="
+                            this.form
+                                .get('username')
+                                .hasError('usernameExists') &&
+                            this.form.get('username').touched
+                        "
+                    >
+                        *Username already exists
+                    </p>
+                </div>
+
+                <div class="mb-4">
+                    <label
+                        class="block text-gray-700 text-lg font-bold mb-2"
+                        for="oldPassword"
+                        >Old password</label
+                    >
+                    <input
+                        class="shadow appearance-none border rounded w-full py-3 px-6 text-gray-700 mb-1 leading-tight focus:outline-none focus:ring-1 focus:ring-purple-800"
+                        id="oldPassword"
+                        type="password"
+                        formControlName="oldPassword"
+                        [ngClass]="{
+                            'bg-red-100':
+                                this.form.get('oldPassword').invalid &&
+                                this.form.get('oldPassword').touched
+                        }"
+                        placeholder="Enter your old password"
+                    />
+                </div>
+
+                <div class="mb-6">
+                    <label
+                        class="block text-gray-700 text-lg font-bold mb-2"
+                        for="newPassword"
+                        >New Password</label
+                    >
+                    <input
+                        class="shadow appearance-none border rounded w-full py-3 px-6 text-gray-700 mb-3 leading-tight focus:outline-none focus:ring-1 focus:ring-purple-800"
+                        id="newPassword"
+                        type="password"
+                        formControlName="newPassword"
+                        [ngClass]="{
+                            'bg-red-100':
+                                this.form.get('newPassword').invalid &&
+                                this.form.get('newPassword').touched
+                        }"
+                        placeholder="enter your new password"
+                    />
+                    <!--error codes-->
+                    <p
+                        class="font-italic text-red-400 mt-2 pl-2"
+                        *ngIf="
+                            this.form
+                                .get('newPassword')
+                                .hasError('minlength') &&
+                            this.form.get('newPassword').touched
+                        "
+                    >
+                        *Password must be atleast
+                        {{ this.minPasswordLen }} characters
+                    </p>
+                </div>
+
+                <div class="flex items-center justify-between mb-4">
+                    <button
+                        class="btn"
+                        type="submit"
+                        [disabled]="this.form.invalid"
+                    >
+                        Update
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

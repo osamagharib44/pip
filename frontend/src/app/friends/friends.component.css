@@ -1,0 +1,44 @@
+.btn {
+    position: relative;
+    display: inline-block;
+    transition: all 0.2s ease-in;
+}
+
+.btn:hover {
+    color: rgb(197, 102, 226);
+    transition: all 0.2s ease-in-out;
+}
+
+.btn::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: -50%;
+    transform: translateX(-50%);
+    width: 0;
+    max-width: 200px;
+    height: 4px;
+    background-color: currentColor ;
+    transition: width 0.2s ease-in-out;
+}
+
+.btn:hover::after {
+    width: 200%;
+}
+
+.btnSel {
+    position: relative;
+    display: inline-block;
+}
+
+.btnSel::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: -50%;
+    transform: translateX(-50%);
+    width: 200%;
+    max-width: 200px;
+    height: 4px;
+    background-color: rgb(197, 102, 226);
+}

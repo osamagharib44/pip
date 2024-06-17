@@ -1,0 +1,84 @@
+<div class="bg-gray-200 min-h-screen flex">
+    <div class="mt-20 w-full h-full flex flex-col items-center justify-between">
+        <div
+            class="bg-white w-full max-w-5xl h-16 p-1 pb-0 shadow-md flex flex-row justify-center items-center gap-32"
+        >
+            <div class="flex flex-col justify-end items-center h-full mb-7">
+                <a
+                    class="text-center text-lg font-small"
+                    [routerLink]="['my']"
+                    routerLinkActive
+                    #rlaMy="routerLinkActive"
+                    [ngClass]="rlaMy.isActive? 'btnSel' :'btn'"
+                    >My Friends</a
+                >
+            </div>
+            <div class="flex flex-col justify-end items-center h-full mb-7">
+              <a
+                    class="text-center text-lg font-small"
+                    [routerLink]="['requests']"
+                    routerLinkActive
+                    #rlaReq="routerLinkActive"
+                    [ngClass]="rlaReq.isActive? 'btnSel' :'btn'"
+                    >Friend Requests</a
+                >
+            </div>
+            <div class="flex flex-col justify-end items-center h-full mb-7">
+              <a
+                    class="text-center text-lg font-small"
+                    [routerLink]="['add']"
+                    routerLinkActive
+                    #rlaAdd="routerLinkActive"
+                    [ngClass]="rlaAdd.isActive? 'btnSel' :'btn'"
+                    >Add Friends</a
+                >
+            </div>
+        </div>
+
+        <div
+            class="bg-white w-full max-w-5xl h-[45rem] p-3 mt-4 shadow-lg flex flex-col justify-between"
+        >
+            <router-outlet></router-outlet>
+        </div>
+    </div>
+</div>
+
+<!--
+    Search box
+    <div class="flex items-center mb-4">
+      <input
+        type="text"
+        placeholder="Search users..."
+        class="flex-1 py-3 px-13 border border-gray-300 rounded-md focus:outline-none p-2"
+      />
+      <button
+        class="py-3 px-8 bg-purple-500 text-white rounded-md ml-2 hover:bg-purple-700"
+      >
+        Search
+      </button>
+    </div>
+
+    -- Results 
+    <div>
+      <ul class="divide-y divide-gray-300">
+        <li
+          class="py-4 flex items-center justify-between"
+          *ngFor="let _ of [].constructor(7); let i = index"
+        >
+          <div class="flex items-center">
+            <img
+              src="https://randomuser.me/api/portraits/men/1.jpg"
+              alt="User Avatar"
+              class="w-12 h-12 rounded-full mr-4"
+            />
+            <span class="text-gray-800">John Doe</span>
+          </div>
+          <button
+            class="py-2 px-4 bg-green-500 text-white rounded-md hover:bg-green-600 focus:outline-none focus:ring focus:border-green-300"
+          >
+            Add
+          </button>
+        </li>
+      </ul>
+    </div> 
+        -->
