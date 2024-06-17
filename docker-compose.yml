@@ -1,0 +1,43 @@
+services:
+  frontend:
+    container_name: pip-frontend
+    build: ./frontend
+    image: frontend
+    ports:
+      - 80:80
+    expose:
+      - 80
+    networks:
+      - appNetwork
+
+  rabbitmq:
+    container_name: pip-rabbitmq
+    image: rabbitmq
+    ports:
+      - 5672:5672
+    expose: 
+      - 5672
+    networks:
+      - appNetwork
+
+  mongoDb:
+    container_name: pip-mongodb
+    image: mongodb/mongodb-community-server
+    volumes:
+      - mongo:/data/db
+    ports:
+      - 27017:27017
+    expose: 
+      - 5672
+    networks:
+      - appNetwork    
+
+
+networks:
+  appNetwork:
+
+volumes:
+  mongo:
+    external: true
+    name: mongo
+    
