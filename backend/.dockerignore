@@ -3,7 +3,7 @@
 **/README.md 
 **/LICENSE
 **/.vscode
-**/npm-debug.log
 **/.env
+**/npm-debug.log
 **/dist
 **/.editorconfig

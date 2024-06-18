@@ -1,17 +1,39 @@
 services:
   frontend:
-    container_name: pip-frontend
+    container_name: frontend
     build: ./frontend
     image: frontend
     ports:
       - 80:80
     expose:
       - 80
+    depends_on:
+      - backend
+    links:
+      - backend
+    networks:
+      - appNetwork
+
+  backend:
+    container_name: backend
+    restart: always
+    build: ./backend
+    image: backend
+    ports:
+      - 3000:3000
+    expose:
+      - 3000
+    depends_on:
+      - rabbitmq
+      - mongodb
+    links:
+      - rabbitmq
+      - mongodb
     networks:
       - appNetwork
 
   rabbitmq:
-    container_name: pip-rabbitmq
+    container_name: rabbitmq
     image: rabbitmq
     ports:
       - 5672:5672
@@ -20,15 +42,15 @@ services:
     networks:
       - appNetwork
 
-  mongoDb:
-    container_name: pip-mongodb
+  mongodb:
+    container_name: mongodb
     image: mongodb/mongodb-community-server
     volumes:
       - mongo:/data/db
     ports:
       - 27017:27017
     expose: 
-      - 5672
+      - 27017
     networks:
       - appNetwork    
 

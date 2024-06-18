@@ -1,4 +1,3 @@
-require("dotenv").config();
 const express = require("express");
 const { validationResult } = require("express-validator");
 const validators = require("../util/validators");

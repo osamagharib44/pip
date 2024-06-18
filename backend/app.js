@@ -62,7 +62,7 @@ app.use(async (err, req, res, next) => {
 //init
 mongoose
 	.connect(
-		`mongodb://localhost:${process.env.DB_PORT}/${process.env.DB_NAME}`
+		`mongodb://${process.env.DB_URI}`
 	)
 	.then((result) => {
 		console.log("connected to db");

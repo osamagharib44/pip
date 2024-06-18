@@ -1,4 +1,3 @@
-require("dotenv").config();
 
 const socketio = require("socket.io");
 const jwt = require("jsonwebtoken");

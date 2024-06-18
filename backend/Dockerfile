@@ -1,4 +1,4 @@
-FROM node:20-alpine AS build
+FROM node:20-alpine
 
 WORKDIR /app
 
@@ -7,12 +7,7 @@ COPY package*.json ./
 RUN npm install
 
 COPY . .
+RUN mv docker.env .env
 
-RUN npm run build
-
-FROM nginx:stable
-
-COPY nginx.conf /etc/nginx/conf.d/default.conf
-COPY --from=build /app/dist/frontend/browser /usr/share/nginx/html
-
-EXPOSE 80
+EXPOSE 3000
+CMD ["node", "app.js"]
