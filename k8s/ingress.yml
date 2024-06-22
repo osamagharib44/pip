@@ -13,7 +13,7 @@ spec:
         path: "/"
         backend:
           service:
-            name: frontend-service
+            name: frontend
             port: 
               number: 80
 
