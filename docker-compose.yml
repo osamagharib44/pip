@@ -7,18 +7,21 @@ services:
       - 80:80
     expose:
       - 80
-    depends_on:
-      - backend
-    links:
-      - backend
     networks:
-      - appNetwork
+      - appNetworkFront
 
   backend:
     container_name: backend
     restart: always
     build: ./backend
     image: backend
+    environment:
+      - PORT=3000
+      - DB_HOST=mongodb
+      - DB_PORT=27017
+      - DB_NAME=pip
+      - RABBIT_HOST=rabbitmq
+      - RABBIT_PORT=5672
     ports:
       - 3000:3000
     expose:
@@ -26,21 +29,18 @@ services:
     depends_on:
       - rabbitmq
       - mongodb
-    links:
-      - rabbitmq
-      - mongodb
     networks:
-      - appNetwork
+      - appNetworkBack
 
   rabbitmq:
     container_name: rabbitmq
     image: rabbitmq
-    ports:
-      - 5672:5672
     expose: 
       - 5672
+    ports:
+      - 5672:5672
     networks:
-      - appNetwork
+      - appNetworkBack
 
   mongodb:
     container_name: mongodb
@@ -52,11 +52,12 @@ services:
     expose: 
       - 27017
     networks:
-      - appNetwork    
+      - appNetworkBack    
 
 
 networks:
-  appNetwork:
+  appNetworkFront:
+  appNetworkBack:
 
 volumes:
   mongo:
