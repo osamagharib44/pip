@@ -15,6 +15,8 @@ services:
     restart: always
     build: ./backend
     image: backend
+    volumes:
+      - imagesVol:/app/images
     environment:
       - PORT=3000
       - DB_HOST=mongodb
@@ -60,6 +62,8 @@ networks:
   appNetworkBack:
 
 volumes:
+  imagesVol:
+    name: imagesVol
   mongo:
     external: true
     name: mongo
