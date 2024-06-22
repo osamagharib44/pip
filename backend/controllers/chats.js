@@ -36,6 +36,9 @@ router.put("/activity/:userId", isAuth, async (req, res, next) => {
 	const pairId =
 		user1_Id < user2_Id ? user1_Id + user2_Id : user2_Id + user1_Id;
 	try {
+		if (!mongoose.Types.ObjectId.isValid(user2_Id)) {
+			return res.status(400).send('Invalid input data');
+		  }
 		let chat = await Chat.findOne({ pairId: pairId })
 			.populate("lastMessage")
 			.exec();
@@ -65,6 +68,9 @@ router.get("/:userId", isAuth, async (req, res, next) => {
 		user1_Id < user2_Id ? user1_Id + user2_Id : user2_Id + user1_Id;
 
 	try {
+		if (!mongoose.Types.ObjectId.isValid(user2_Id)) {
+			return res.status(400).send('Invalid input data');
+		  }
 		let chat = await Chat.findOne({ pairId: pairId }).exec();
 
 		if (!chat) {
@@ -112,6 +118,9 @@ router.post("/:userId", isAuth, async (req, res, next) => {
 
 	const content = req.body.message;
 	try {
+		if (!mongoose.Types.ObjectId.isValid(user2_Id)) {
+			return res.status(400).send('Invalid input data');
+		  }
 		if (content.length > 250) {
 			throw errorHelper.createError("Message is too long", 400);
 		}

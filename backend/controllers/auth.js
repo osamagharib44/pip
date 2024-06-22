@@ -9,6 +9,8 @@ const isAuth = require("../util/is-auth-middleware");
 const fs = require('fs'); 
 const util = require('util');
 const deleteFile = util.promisify(fs.unlink); 
+const saveFile = util.promisify(fs.writeFile)
+const fileType = require('file-type');
 
 const CRYPT_SALT = 12;
 const EXPIRE_TIME = 3600; //hour
@@ -96,7 +98,6 @@ router.put(
 			if (!validationResult(req).isEmpty()) {
 				throw errorHelper.createError("invalid input data", 400);
 			}
-
 			const user = await User.findOne({ _id: userId }).exec();
 			const userDocCheck = await User.findOne({ username: newUsername }).exec();
 
@@ -120,6 +121,13 @@ router.put(
 			user.password = hashNewPassword
 			user.username = newUsername
 			if (newImage){
+				//check file type
+				const type = await fileType.fromBuffer(newImage.buffer);
+				if (!type || !type.mime.startsWith('image/')) {
+				  throw errorHelper.createError("Invalid file type", 400)
+				}
+
+				//delete old file
 				if (user.imagePath!="images/default.png"){
 					try {
 						await deleteFile(user.imagePath)
@@ -128,18 +136,16 @@ router.put(
 						console.log(err)
 					}
 				}
-				user.imagePath = newImage.path
+
+				//save new file
+				const path = "images/" + new Date().toISOString() + "-" + newImage.originalname;
+				await saveFile(path, newImage.buffer)
+				user.imagePath = path
 			}
 			await user.save()
 			res.status(200).json({message: "Updated profile", newImagePath: user.imagePath})
 
 		} catch (error) {
-			try {
-				await deleteFile(newImage.path)
-			}
-			catch (err) {
-				console.log(err)
-			}
 			next(error);
 		}
 	}

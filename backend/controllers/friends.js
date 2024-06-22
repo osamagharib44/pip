@@ -30,6 +30,9 @@ router.post("", isAuth, async (req, res, next) => {
 	const toAddUserId = req.body.toAddUserId;
 
 	try {
+		if (!mongoose.Types.ObjectId.isValid(toAddUserId)) {
+			return res.status(400).send("Invalid input data");
+		}
 		if (userId == toAddUserId) {
 			throw errorHelper.createError("Can't add yourself", 400);
 		}
@@ -62,6 +65,9 @@ router.delete("/:targetUserId", isAuth, async (req, res, next) => {
 	const userId = req.userId;
 	const toRemoveUserId = req.params.targetUserId;
 	try {
+		if (!mongoose.Types.ObjectId.isValid(toRemoveUserId)) {
+			return res.status(400).send("Invalid input data");
+		}
 		const user = await User.findOne({ _id: userId }).exec();
 		const toRemoveUser = await User.findOne({ _id: toRemoveUserId }).exec();
 
@@ -110,6 +116,10 @@ router.post("/requests", isAuth, async (req, res, next) => {
 	const toSendUserId = req.body.toSendUserId;
 
 	try {
+		if (!mongoose.Types.ObjectId.isValid(toSendUserId)) {
+			return res.status(400).send("Invalid input data");
+		}
+
 		if (userId == toSendUserId) {
 			throw errorHelper.createError("Can't add yourself", 400);
 		}
@@ -117,7 +127,10 @@ router.post("/requests", isAuth, async (req, res, next) => {
 		const user = await User.findOne({ _id: userId }).exec();
 		const toSendUser = await User.findOne({ _id: toSendUserId }).exec();
 
-		if (user.friends.includes(toSendUser._id) || toSendUser.friends.includes(user._id)) {
+		if (
+			user.friends.includes(toSendUser._id) ||
+			toSendUser.friends.includes(user._id)
+		) {
 			throw errorHelper.createError("Already friends", 400);
 		}
 
@@ -142,6 +155,9 @@ router.delete("/requests/:targetUserId", isAuth, async (req, res, next) => {
 	const toRejectUserId = req.params.targetUserId;
 
 	try {
+		if (!mongoose.Types.ObjectId.isValid(toRejectUserId)) {
+			return res.status(400).send("Invalid input data");
+		}
 		const user = await User.findOne({ _id: userId }).exec();
 		const toRejectUser = await User.findOne({ _id: toRejectUserId }).exec();
 

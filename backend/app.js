@@ -1,41 +1,44 @@
 //main
 require("dotenv").config();
-const path = require('path')
+const path = require("path");
 const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
-const multer = require('multer')
+const multer = require("multer");
 const cors = require("cors");
-const socket = require('./socket')
-const rabbit = require('./rabbit')
+const socket = require("./socket");
+const rabbit = require("./rabbit");
+const fileType = require("file-type");
 //routes
 const authRoutes = require("./controllers/auth");
 const friendsRoutes = require("./controllers/friends");
 const chatsRoutes = require("./controllers/chats");
 
 //some file upload config
-const fileStorage = multer.diskStorage({
-	destination:(req, file, cb) => {
-		cb(null, 'images')
-	},
-	filename: (req, file, cb) => {
-		cb(null, new Date().toISOString() + '-' + file.originalname)
-	}
-})
+const fileStorage = multer.memoryStorage();
 
-const fileFilter = (req, file ,cb) => {
-	if (file.mimetype == "image/png" || file.mimetype == "image/jpeg" || file.mimetype == "image/jpg"){
-		cb(null, true)		
+const fileFilter = async (req, file, cb) => {
+	if (
+		file.mimetype == "image/png" ||
+		file.mimetype == "image/jpeg" ||
+		file.mimetype == "image/jpg"
+	) {
+		cb(null, true);
+	} else {
+		cb(null, false);
 	}
-	else {
-		cb(null, false)
-	}
-}
+};
 
 //middlewares
 const app = express();
-app.use('/images', express.static(path.join(__dirname, 'images')))
-app.use(multer({storage: fileStorage, fileFilter: fileFilter}).single('image'))
+app.use("/images", express.static(path.join(__dirname, "images")));
+app.use(
+	multer({
+		storage: fileStorage,
+		fileFilter: fileFilter,
+		limits: { fileSize: 1000000},
+	}).single("image")
+);
 app.use(bodyParser.json());
 app.use(cors());
 
@@ -62,13 +65,13 @@ app.use(async (err, req, res, next) => {
 //init
 mongoose
 	.connect(
-		`mongodb://${process.env.DB_URI}`
+		`mongodb://${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}`
 	)
 	.then((result) => {
 		console.log("connected to db");
 		const server = app.listen(process.env.PORT);
 
-		socket.init(server)
-		rabbit.init()
+		socket.init(server);
+		rabbit.init();
 	})
 	.catch((err) => console.log(err));

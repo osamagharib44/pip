@@ -6,7 +6,7 @@ let queue;
 const exchangeName = "chatExchange";
 
 module.exports.init = (io) => {
-	amqp.connect(`amqp://${process.env.RABBIT_URI}`, (err, connection) => {
+	amqp.connect(`amqp://${process.env.RABBIT_HOST}:${process.env.RABBIT_PORT}`, (err, connection) => {
 		if (err) {
 			throw err;
 		}
