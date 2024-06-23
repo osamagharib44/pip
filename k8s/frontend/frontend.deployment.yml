@@ -19,6 +19,9 @@ spec:
       containers:
       - image: osamagharib/pip-frontend
         name: frontend
+        env:
+        - name: BACKEND_URL
+          value: 'http://pip-backend.com'
         resources: {}
         ports:
         - containerPort: 80
