@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: backend
+  name: backend
+spec:
+  replicas: 2
+  strategy: 
+    type: Recreate
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+      - image: osamagharib/pip-backend
+        name: backend
+        env:
+        - name: PORT
+          value: '3000'
+
+        - name: DB_HOST
+          value: mongodb
+        - name: DB_PORT
+          value: '27017'
+        - name: DB_NAME
+          value: pip
+        
+        - name: RABBIT_HOST
+          value: rabbitmq
+        - name: RABBIT_PORT
+          value: '5672'
+
+        resources: {}
+        ports:
+        - containerPort: 3000
