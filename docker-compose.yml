@@ -1,8 +1,8 @@
 services:
   frontend:
     container_name: frontend
-    build: ./frontend
-    image: frontend
+    ##build: ./frontend
+    image: osamagharib/pip-frontend
     environment:
       - BACKEND_URL=http://localhost:3000
     ports:
@@ -15,8 +15,8 @@ services:
   backend:
     container_name: backend
     restart: always
-    build: ./backend
-    image: backend
+    ##build: ./backend
+    image: osamagharib/pip-backend
     volumes:
       - imagesVol:/app/images
     environment:
@@ -48,7 +48,7 @@ services:
 
   mongodb:
     container_name: mongodb
-    image: mongodb/mongodb-community-server
+    image: mongo
     volumes:
       - mongo:/data/db
     ports:
