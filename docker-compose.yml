@@ -67,6 +67,5 @@ volumes:
   imagesVol:
     name: imagesVol
   mongo:
-    external: true
     name: mongo
     
