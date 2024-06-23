@@ -3,6 +3,8 @@ services:
     container_name: frontend
     build: ./frontend
     image: frontend
+    environment:
+      - BACKEND_URL=http://localhost:3000
     ports:
       - 80:80
     expose:
