@@ -28,12 +28,6 @@ Coming Soon
 
 -   Download the docker compose file
 
--   create mongoDB volume
-
-```bash
-docker volume create mongo
-```
-
 -   Run docker compose file
 
 ```bash
