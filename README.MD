@@ -26,11 +26,7 @@ Coming Soon
 
 ## Installation by docker
 
--   clone project
-
-```bash
-git clone https://github.com/osamagharib44/pip
-```
+-   Download the docker compose file
 
 -   create mongoDB volume
 
@@ -38,10 +34,10 @@ git clone https://github.com/osamagharib44/pip
 docker volume create mongo
 ```
 
--   Build and run
+-   Run docker compose file
 
 ```bash
-docker compose build && docker compose up
+docker compose up
 ```
 
 Go to localhost:80 to test
