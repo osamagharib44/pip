@@ -1,0 +1,10 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: backend
+spec:
+  selector:
+    app:  backend
+  ports:
+  - port:  3000
+    targetPort:  3000

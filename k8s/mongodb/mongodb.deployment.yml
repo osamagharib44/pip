@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: mongodb
+  name: mongodb
+spec:
+  replicas: 1
+  strategy: 
+    type: Recreate
+  selector:
+    matchLabels:
+      app: mongodb
+  template:
+    metadata:
+      labels:
+        app: mongodb
+    spec:
+      containers:
+      - image: mongodb/mongodb-community-server
+        name: mongodb
+        resources: {}
+        ports:
+        - containerPort: 21017
+        volumeMounts:
+          - name: mongodb-volume
+            mountPath: /data/db
+      nodeSelector:
+        type: db
+      volumes:
+        - name: mongodb-volume
+          hostPath:
+            path: "/k8s-data/mongodb-data"
