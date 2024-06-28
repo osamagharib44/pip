@@ -55,7 +55,10 @@ export class AddComponent {
     }
 
     goToPage(page: number) {
-        const mxPage = Math.ceil(this.total / this.DOC_PER_PAGE);
+        let mxPage = Math.ceil(this.total / this.DOC_PER_PAGE);
+        if (this.total==0){
+            mxPage = 1
+        }
         this.currentPage = ((page - 1 + mxPage) % mxPage) + 1;
         this.searchUp(false);
     }

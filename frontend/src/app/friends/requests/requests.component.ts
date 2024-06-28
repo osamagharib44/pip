@@ -31,7 +31,10 @@ export class RequestsComponent implements OnInit {
 
     goToPage(page: number) {
         const total = this.userService.user.value.friendRequests.length;
-        const mxPage = Math.ceil(total / this.DOC_PER_PAGE);
+        let mxPage = Math.ceil(total / this.DOC_PER_PAGE);
+        if (total == 0) {
+            mxPage = 1;
+        }
         this.currentPage = ((page - 1 + mxPage) % mxPage) + 1;
 
         const start = (this.currentPage - 1) * this.DOC_PER_PAGE;
@@ -41,8 +44,8 @@ export class RequestsComponent implements OnInit {
         );
     }
 
-    handleFriendRequest(targetUserId: string, val:boolean){
-        this.userService.handleFriendRequest(targetUserId, val)
-        this.goToPage(this.currentPage)
+    handleFriendRequest(targetUserId: string, val: boolean) {
+        this.userService.handleFriendRequest(targetUserId, val);
+        this.goToPage(this.currentPage);
     }
 }
