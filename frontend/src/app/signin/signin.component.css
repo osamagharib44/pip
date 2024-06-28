@@ -10,15 +10,25 @@
     position: relative;
     transition: all 0.5s;
     overflow: hidden;
-  }
-  
-  .btn:hover {
+}
+
+.btn.disabled {
+    color: rgb(0, 0, 0);
+    border: 2px solid rgb(0, 0, 0);
+    background-color: rgba(49, 48, 48, 0.116);
+    cursor: not-allowed;
+}
+.btn.disabled:hover {
+    cursor: not-allowed;
+}
+
+.btn.ready:hover {
     color: white;
     z-index: 1; /* Ensure the button text is above the ::before element */
-  }
-  
-  .btn::before {
-    content: '';
+}
+
+.btn::before {
+    content: "";
     position: absolute;
     height: 100%;
     width: 0%;
@@ -28,9 +38,8 @@
     background-color: purple;
     z-index: -1; /* Ensure ::before element is below the button text */
     transition: all 0.5s;
-  }
-  
-  .btn:hover::before {
+}
+
+.btn.ready:hover::before {
     width: 160%;
-  }
-  
+}
