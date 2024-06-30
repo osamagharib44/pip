@@ -8,7 +8,7 @@ const errorHelper = require("../util/error-helper");
 const isAuth = require("../util/is-auth-middleware");
 const mongoose = require("mongoose");
 const router = express.Router();
-const rabbit = require("../rabbit")
+const rabbit = require("../rabbit");
 
 //get activity of a chat
 router.get("/activity", isAuth, async (req, res, next) => {
@@ -37,8 +37,8 @@ router.put("/activity/:userId", isAuth, async (req, res, next) => {
 		user1_Id < user2_Id ? user1_Id + user2_Id : user2_Id + user1_Id;
 	try {
 		if (!mongoose.Types.ObjectId.isValid(user2_Id)) {
-			return res.status(400).send('Invalid input data');
-		  }
+			return res.status(400).send("Invalid input data");
+		}
 		let chat = await Chat.findOne({ pairId: pairId })
 			.populate("lastMessage")
 			.exec();
@@ -69,8 +69,8 @@ router.get("/:userId", isAuth, async (req, res, next) => {
 
 	try {
 		if (!mongoose.Types.ObjectId.isValid(user2_Id)) {
-			return res.status(400).send('Invalid input data');
-		  }
+			return res.status(400).send("Invalid input data");
+		}
 		let chat = await Chat.findOne({ pairId: pairId }).exec();
 
 		if (!chat) {
@@ -119,10 +119,15 @@ router.post("/:userId", isAuth, async (req, res, next) => {
 	const content = req.body.message;
 	try {
 		if (!mongoose.Types.ObjectId.isValid(user2_Id)) {
-			return res.status(400).send('Invalid input data');
-		  }
+			return res.status(400).send("Invalid input data");
+		}
 		if (content.length > 250) {
 			throw errorHelper.createError("Message is too long", 400);
+		}
+		const user1_doc = await User.findOne({ _id: user1_Id }).exec();
+
+		if (!user1_doc.friends.includes(user2_Id)) {
+			throw errorHelper.createError("Not friends", 400);
 		}
 
 		let chat = await Chat.findOne({ pairId: pairId }).exec();
@@ -154,7 +159,7 @@ router.post("/:userId", isAuth, async (req, res, next) => {
 			timestamp: msg.timestamp,
 		};
 
-		rabbit.publishMessage(data)
+		rabbit.publishMessage(data);
 
 		res.status(201).json({
 			message: "Sucessfully sent message",

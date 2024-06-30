@@ -137,6 +137,7 @@
             class="btn"
             type="submit"
             [disabled]="this.form.invalid"
+            [ngClass]="{ 'ready': this.form.valid, 'disabled': this.form.invalid}"
           >
             Sign Up
           </button>

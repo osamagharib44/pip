@@ -6,6 +6,7 @@ const errorHelper = require("../util/error-helper");
 const isAuth = require("../util/is-auth-middleware");
 const mongoose = require("mongoose");
 const router = express.Router();
+const rabbit = require("../rabbit");
 
 //get friends
 router.get("", isAuth, async (req, res, next) => {
@@ -44,11 +45,23 @@ router.post("", isAuth, async (req, res, next) => {
 		if (!user.friends.includes(toAddUser._id)) {
 			user.friends.push(toAddUser._id);
 			await user.save();
+
+			const data = {
+				type: "updateFriends",
+				user: user._id
+			};
+			rabbit.publishFriendsUpdate(data);
 			//	changed = true;
 		}
 		if (!toAddUser.friends.includes(user._id)) {
 			toAddUser.friends.push(user._id);
 			await toAddUser.save();
+
+			const data = {
+				type: "updateFriends",
+				user: toAddUser._id
+			};
+			rabbit.publishFriendsUpdate(data);
 			//	changed = true;
 		}
 
@@ -61,37 +74,37 @@ router.post("", isAuth, async (req, res, next) => {
 });
 
 //delete a friend
-router.delete("/:targetUserId", isAuth, async (req, res, next) => {
-	const userId = req.userId;
-	const toRemoveUserId = req.params.targetUserId;
-	try {
-		if (!mongoose.Types.ObjectId.isValid(toRemoveUserId)) {
-			return res.status(400).send("Invalid input data");
-		}
-		const user = await User.findOne({ _id: userId }).exec();
-		const toRemoveUser = await User.findOne({ _id: toRemoveUserId }).exec();
+// router.delete("/:targetUserId", isAuth, async (req, res, next) => {
+// 	const userId = req.userId;
+// 	const toRemoveUserId = req.params.targetUserId;
+// 	try {
+// 		if (!mongoose.Types.ObjectId.isValid(toRemoveUserId)) {
+// 			return res.status(400).send("Invalid input data");
+// 		}
+// 		const user = await User.findOne({ _id: userId }).exec();
+// 		const toRemoveUser = await User.findOne({ _id: toRemoveUserId }).exec();
 
-		//const changed = false;
-		if (user.friends.includes(toRemoveUser._id)) {
-			const key = user.friends.indexOf(toRemoveUserId._id);
-			user.friends.splice(key, 1);
-			await user.save();
-			//	changed = true;
-		}
-		if (toRemoveUser.friends.includes(user._id)) {
-			const key = toRemoveUser.friends.indexOf(user._id);
-			toRemoveUser.friends.splice(key, 1);
-			await toRemoveUser.save();
-			//	changed = true;
-		}
+// 		//const changed = false;
+// 		if (user.friends.includes(toRemoveUser._id)) {
+// 			const key = user.friends.indexOf(toRemoveUserId._id);
+// 			user.friends.splice(key, 1);
+// 			await user.save();
+// 			//	changed = true;
+// 		}
+// 		if (toRemoveUser.friends.includes(user._id)) {
+// 			const key = toRemoveUser.friends.indexOf(user._id);
+// 			toRemoveUser.friends.splice(key, 1);
+// 			await toRemoveUser.save();
+// 			//	changed = true;
+// 		}
 
-		res.status(200).json({
-			message: "Successfully unfriended both users",
-		});
-	} catch (err) {
-		next(err);
-	}
-});
+// 		res.status(200).json({
+// 			message: "Successfully unfriended both users",
+// 		});
+// 	} catch (err) {
+// 		next(err);
+// 	}
+// });
 
 //get friend requests
 router.get("/requests", isAuth, async (req, res, next) => {
@@ -140,6 +153,11 @@ router.post("/requests", isAuth, async (req, res, next) => {
 
 		toSendUser.friendRequests.push(user._id);
 		await toSendUser.save();
+		const data = {
+			type: "updateFriendRequests",
+			user: toSendUser._id
+		};
+		rabbit.publishFriendsUpdate(data);
 
 		res.status(201).json({
 			message: "Sent a friend request successfully",

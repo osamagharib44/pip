@@ -2,8 +2,8 @@ const amqp = require("amqplib/callback_api");
 const socket = require('./socket')
 
 let channel;
-let queue;
-const exchangeName = "chatExchange";
+const chatExchange = "chatExchange";
+const friendsExchange = "friendsExchange"
 
 module.exports.init = (io) => {
 	amqp.connect(`amqp://${process.env.RABBIT_HOST}:${process.env.RABBIT_PORT}`, (err, connection) => {
@@ -16,18 +16,23 @@ module.exports.init = (io) => {
 			}
 			console.log('connected to rabbit')
             channel = chn
-			channel.assertExchange(exchangeName, "fanout", {
+		
+			//assert all exchanges
+			channel.assertExchange(chatExchange, "fanout", {
 				durable: false,
 			});
 
+			channel.assertExchange(friendsExchange, "fanout", {
+				durable: false,
+			});
+
+			//consumer for chat
 			channel.assertQueue("", { exclusive: true }, (err, q) => {
 				if (err) {
 					throw err;
 				}
-
-                channel = channel
-				queue = q.queue;
-				channel.bindQueue(queue, exchangeName, "");
+				const queue = q.queue;
+				channel.bindQueue(queue, chatExchange, "");
 				channel.consume(queue, (msg) => {
                     const data = JSON.parse(msg.content.toString())
                     const io = socket.getIO();
@@ -46,10 +51,36 @@ module.exports.init = (io) => {
                     }
                 });
 			});
+
+			//consumer for friends/requests update
+			channel.assertQueue("", { exclusive: true }, (err, q) => {
+				if (err) {
+					throw err;
+				}
+				const queue = q.queue;
+				channel.bindQueue(queue, friendsExchange, "");
+				channel.consume(queue, (msg) => {
+                    const data = JSON.parse(msg.content.toString())
+                    const io = socket.getIO();
+                    if (io) {
+						const type = data.type //updateFriendRequests or updateFriends
+                        const conID = socket.getConnectionID(data.user);
+            
+                        if (conID) {
+                        	//console.log("sending to user");
+                        	io.to(conID).emit(type);
+                        }
+                    }
+                });
+			});
 		});
 	});
 };
 
 module.exports.publishMessage = (msg) => {
-    channel.publish(exchangeName, "", Buffer.from(JSON.stringify(msg)))
+    channel.publish(chatExchange, "", Buffer.from(JSON.stringify(msg)))
+}
+
+module.exports.publishFriendsUpdate = (msg) => {
+    channel.publish(friendsExchange, "", Buffer.from(JSON.stringify(msg)))
 }
