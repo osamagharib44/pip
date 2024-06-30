@@ -21,7 +21,12 @@ spec:
         name: frontend
         env:
         - name: BACKEND_URL
-          value: 'http://pip-backend.com'
+          valueFrom:
+            configMapKeyRef:
+              name: app-config
+              key: BACKEND_URL
+
+
         resources: {}
         ports:
         - containerPort: 80

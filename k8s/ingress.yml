@@ -3,33 +3,37 @@ kind: Ingress
 metadata:
   name: ingress
   annotations:
-    spec.ingressClassName: nginx
-    nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "3601"
     nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
     nginx.ingress.kubernetes.io/upstream-hash-by: "$client_ip"
-    
+
   labels:
     app: ingress
 spec:
+  ingressClassName: nginx
   rules:
-    - host: pip.com
-      http:
+    - http:
         paths:
           - pathType: Prefix
-            path: "/"
-            backend:
-              service:
-                name: frontend
-                port:
-                  number: 80
-
-    - host: pip-backend.com
-      http:
-        paths:
-          - pathType: Prefix
-            path: "/"
+            path: /api
             backend:
               service:
                 name: backend
                 port:
                   number: 3000
+          - pathType: Prefix
+            path: /socket.io
+            backend:
+              service:
+                name: backend
+                port:
+                  number: 3000
+
+          - pathType: Prefix
+            path: /
+            backend:
+              service:
+                name: frontend
+                port:
+                  number: 80
+                  

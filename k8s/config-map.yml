@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+data:
+  BACKEND_URL: http://172.213.196.241/api
+  BACKEND_ROOT_PATH: /api
+  BACKEND_PORT: '3000'
+  DB_HOST: mongodb
+  DB_NAME: pip
+  DB_PORT: '27017'
+  RABBIT_HOST: rabbitmq
+  RABBIT_PORT: '5672'
+

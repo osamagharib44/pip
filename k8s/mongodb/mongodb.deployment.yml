@@ -25,9 +25,8 @@ spec:
         volumeMounts:
           - name: mongodb-volume
             mountPath: /data/db
-      nodeSelector:
-        type: db
       volumes:
         - name: mongodb-volume
           hostPath:
-            path: "/k8s-data/mongodb-data"
+            path: /tmp/mongodb-data
+            type: DirectoryOrCreate

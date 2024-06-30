@@ -20,21 +20,58 @@ spec:
       - image: osamagharib/pip-backend
         name: backend
         env:
+        - name: ROOT_PATH
+          valueFrom:
+            configMapKeyRef:
+              name: app-config
+              key: BACKEND_ROOT_PATH
         - name: PORT
-          value: '3000'
+          valueFrom:
+            configMapKeyRef:
+              name: app-config
+              key: BACKEND_PORT
 
         - name: DB_HOST
-          value: mongodb
+          valueFrom:
+            configMapKeyRef:
+              name: app-config
+              key: DB_HOST          
         - name: DB_PORT
-          value: '27017'
+          valueFrom:
+            configMapKeyRef:
+              name: app-config
+              key: DB_PORT
         - name: DB_NAME
-          value: pip
-        
+          valueFrom:
+            configMapKeyRef:
+              name: app-config
+              key: DB_NAME
+                    
         - name: RABBIT_HOST
-          value: rabbitmq
+          valueFrom:
+            configMapKeyRef:
+              name: app-config
+              key: RABBIT_HOST
         - name: RABBIT_PORT
-          value: '5672'
-
+          valueFrom:
+            configMapKeyRef:
+              name: app-config
+              key: RABBIT_PORT
+            
+        - name: JWT_KEY
+          valueFrom:
+            secretKeyRef:
+              name: jwt
+              key: key
+        
         resources: {}
         ports:
         - containerPort: 3000
+        volumeMounts:
+          - name: backend-images
+            mountPath: /app/images
+      volumes:
+        - name: backend-images
+          hostPath:
+            path: /tmp/backend-images
+            type: DirectoryOrCreate
