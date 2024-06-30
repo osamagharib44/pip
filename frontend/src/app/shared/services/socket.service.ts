@@ -19,6 +19,7 @@ export class SocketService {
             auth: {
                 token: token,
             },
+            transports: ["websocket"]
         });
 
         this.socket.on('message', (data) => {
