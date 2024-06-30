@@ -9,6 +9,10 @@ const cors = require("cors");
 const socket = require("./socket");
 const rabbit = require("./rabbit");
 const fileType = require("file-type");
+let ROOT_PATH = process.env.ROOT_PATH
+if (!ROOT_PATH){
+	ROOT_PATH = ''
+}
 //routes
 const authRoutes = require("./controllers/auth");
 const friendsRoutes = require("./controllers/friends");
@@ -31,21 +35,24 @@ const fileFilter = async (req, file, cb) => {
 
 //middlewares
 const app = express();
-app.use("/images", express.static(path.join(__dirname, "images")));
+app.get(ROOT_PATH+"/images/default.png", (req, res) => {
+	res.sendFile(path.join(__dirname, "default.png"));
+});
+app.use(ROOT_PATH+"/images", express.static(path.join(__dirname, "images")));
 app.use(
 	multer({
 		storage: fileStorage,
 		fileFilter: fileFilter,
-		limits: { fileSize: 1000000},
+		limits: { fileSize: 1000000 },
 	}).single("image")
 );
 app.use(bodyParser.json());
 app.use(cors());
 
 //use the routes
-app.use("/auth", authRoutes);
-app.use("/friends", friendsRoutes);
-app.use("/chats", chatsRoutes);
+app.use(ROOT_PATH+"/auth", authRoutes);
+app.use(ROOT_PATH+"/friends", friendsRoutes);
+app.use(ROOT_PATH+"/chats", chatsRoutes);
 
 //error middleware
 app.use(async (err, req, res, next) => {
@@ -71,7 +78,7 @@ mongoose
 		console.log("connected to db");
 		const server = app.listen(process.env.PORT);
 
-		socket.init(server);
+		socket.init(server, ROOT_PATH);
 		rabbit.init();
 	})
 	.catch((err) => console.log(err));

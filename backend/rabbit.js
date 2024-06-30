@@ -39,13 +39,14 @@ module.exports.init = (io) => {
                     if (io) {
                         const con1ID = socket.getConnectionID(data.sender);
                         const con2ID = socket.getConnectionID(data.receiver);
-            
+						console.log("RECIEVED MSG")
+
                         if (con1ID) {
-                        	//console.log("sending to user1");
+                        	console.log("sending to user1");
                         	io.to(con1ID).emit("message", data);
                         }
                         if (con2ID) {
-                        	//console.log("sending to user2");
+                        	console.log("sending to user2");
                         	io.to(con2ID).emit("message", data);
                         }
                     }
@@ -67,7 +68,6 @@ module.exports.init = (io) => {
                         const conID = socket.getConnectionID(data.user);
             
                         if (conID) {
-                        	//console.log("sending to user");
                         	io.to(conID).emit(type);
                         }
                     }
@@ -78,6 +78,7 @@ module.exports.init = (io) => {
 };
 
 module.exports.publishMessage = (msg) => {
+	console.log("SENT MSG")
     channel.publish(chatExchange, "", Buffer.from(JSON.stringify(msg)))
 }
 
