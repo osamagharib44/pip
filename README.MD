@@ -29,8 +29,13 @@ Coming Soon
 1. Since we are using a containerized environment, there will be multiple backend container running on multiple servers. Therefore, every user socket connection won't be to a one single server.
     - **Solution**: Every backend pod keeps track of its socket connections. When we want to deliver a realtime change, we send to rabbitMQ, rabbitMQ will then broadcast to all backend pods. Each backend checks if any user connected to them should recieve any changes
 2. How to store all chat messages without overflowing the database?
-    - **Solution**: We have a chat model and a message model. The chat has a list of messages. However, the list of messages only store the objectId of the 
-    messages. referencing to the specific message in the messages collection.
+    - **Solution**: We have a chat model and a message model. The chat has a list of messages. However, the list of messages only store the objectId of the messages. referencing to the specific message in the messages collection.
+3. How to store user's friends, friend requests without overflowing the database?
+    - **Solution**: We used a similar solution to #2
+
+## Architecture
+![image info](./architecture.jpg)
+
 
 ## Installation by docker
 
