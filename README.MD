@@ -7,7 +7,7 @@ A social chatting app where you can add your friends and loved ones and chat wit
 - **DISCLAIMER: PREFERRED TO BE ON PC**
 - **DISCLAIMER: Might be down sometimes, since it's deployed on Azure AKS**
 
-- [LIVE DEMO](http://www.pip-app.xyz)
+- [LIVE DEMO](https://pip-app.xyz)
 - [ALTERNATE LINK](http://172.213.196.241)
 
 
@@ -20,6 +20,8 @@ A social chatting app where you can add your friends and loved ones and chat wit
 -   RabbitMQ
 -   MongoDB
 -   Nginx
+-   Docker
+-   Kubernetes
 
 ## Features
 
