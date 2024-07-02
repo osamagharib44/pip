@@ -6,13 +6,19 @@ metadata:
     nginx.ingress.kubernetes.io/proxy-read-timeout: "3601"
     nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
     nginx.ingress.kubernetes.io/upstream-hash-by: "$client_ip"
+    cert-manager.io/cluster-issuer: "letsencrypt-issuer"
 
   labels:
     app: ingress
 spec:
   ingressClassName: nginx
+  tls:
+  - hosts:
+    - pip-app.xyz
+    secretName: letsencrypt-secret
   rules:
-    - http:
+    - host: pip-app.xyz
+      http:
         paths:
           - pathType: Prefix
             path: /api

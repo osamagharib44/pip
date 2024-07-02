@@ -3,7 +3,7 @@ kind: ConfigMap
 metadata:
   name: app-config
 data:
-  BACKEND_URL: http://172.213.196.241/api
+  BACKEND_URL: https://pip-app.xyz/api
   BACKEND_ROOT_PATH: /api
   BACKEND_PORT: '3000'
   DB_HOST: mongodb
