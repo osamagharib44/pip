@@ -4,6 +4,19 @@ A social chatting app where you can add your friends and loved ones and chat wit
 
 ## Demo
 
+### Authentication
+![auth](./demo_images/signin.png)
+![auth](./demo_images/signup.png)
+
+### profile
+![profile](./demo_images/profile.png)
+
+### friends
+![friends](./demo_images/friends.png)
+
+### chats
+![chats](./demo_images/chats.png)
+
 - **DISCLAIMER: PREFERRED TO BE ON PC**
 - **DISCLAIMER: Might be down sometimes, since it's deployed on Azure AKS**
 
@@ -41,7 +54,7 @@ A social chatting app where you can add your friends and loved ones and chat wit
     - **Solution**: We used a similar solution to #2
 
 ## Architecture
-![image info](./architecture.jpg)
+![architecture](./architecture.jpg)
 
 
 ## Installation by docker
